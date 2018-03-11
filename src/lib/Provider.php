@@ -19,10 +19,13 @@ class Provider {
     private $shareUrl;
     private $attributes = [];
     
+    private $className;
+    
     private $text; //text to show in link (can be html)
     
     public function __construct($provider, $shareUrl) {
         $this->name = $provider;
+        $this->className = strtolower($provider);
         $this->shareUrl = $shareUrl;
     }
     
@@ -53,6 +56,10 @@ class Provider {
         unset($this->attributes[$key]);
     }
     
+    
+    public function getClassName(){
+        return $this->className;
+    }
     
     public function getName(){
         return $this->name;

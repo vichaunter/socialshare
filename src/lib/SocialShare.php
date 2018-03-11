@@ -8,25 +8,24 @@
 
 namespace VicHaunter\SocialShare\Lib;
 
+use VicHaunter\Factories\SocialShare\ProvidersFactory;
 use VicHaunter\Lib\SocialShare\Provider;
 use VicHaunter\SocialShare\Interfaces\ISocialShare;
-use VicHaunter\SocialShare\Traits\TIcons;
 
 class SocialShare implements ISocialShare {
-    
-    use TIcons;
     
     /** @var $provider Provider */
     protected $provider;
     
     protected $icon;
     
+    public function __construct() {
+        $caller = (new \ReflectionClass($this))->getShortName();
+        $this->provider = new Provider($caller, ProvidersFactory::PROVIDERS[$caller]['url']);
+    }
+    
     public function getAllowedProviders(){
-        return [
-          'facebook',
-          'twitter',
-          'gplus',
-        ];
+        return array_keys(ProvidersFactory::PROVIDERS);
     }
     
     public function getProvider() {
@@ -53,7 +52,7 @@ class SocialShare implements ISocialShare {
         
         $shareUrl = $this->provider->getUrl().'?'.http_build_query($this->provider->getAttributes());
         
-        $html = '<a class="btn btn-social-icon btn-'.$this->provider->getName().'" href="'.$shareUrl.'" target="_blank">'.$this->getInnerText().'</a>';
+        $html = '<a class="btn btn-social-icon btn-'.$this->provider->getClassName().'" href="'.$shareUrl.'" target="_blank">'.$this->getInnerText().'</a>';
         return $html;
     }
     
@@ -62,11 +61,11 @@ class SocialShare implements ISocialShare {
             return '<i class="'.$this->icon.'"></i>';
         }
         
-        return $this->provider->getName();
+        return $this->provider->getClassName();
     }
     
     public function useIconPack( $pack ) {
-        $this->setIconClass($this->getIcon($pack));
+        $this->setIconClass(ProvidersFactory::PROVIDERS[$this->provider->getName()][$pack]);
     }
     
 }

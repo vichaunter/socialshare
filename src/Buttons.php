@@ -8,32 +8,34 @@
 
 namespace VicHaunter\SocialShare;
 
+use VicHaunter\Factories\SocialShare\ProvidersFactory;
 use VicHaunter\Lib\SocialShare\Provider;
 
 class Buttons {
-    
-    const PROVIDERS = [
-        'Google',
-        'Facebook',
-        'Twitter',
-    ];
     
     /** @var $providers Provider */
     public $providers;
     
     public function __construct($includeOnly = null, $iconPack = null) {
-        foreach (self::PROVIDERS as $provider) {
+        foreach (ProvidersFactory::PROVIDERS as $provider => $v) {
             $low = strtolower($provider);
             $class = "VicHaunter\SocialShare\\$provider";
-            $this->providers[$low] = new $class();
-            if($iconPack){
-                $this->providers[$low]->useIconPack($iconPack);
+            if($includeOnly && in_array($low, array_map('strtolower', $includeOnly))){
+                $this->providers[$low] = new $class();
+            }
+            if(!$includeOnly){
+                $this->providers[$low] = new $class();
+            }
+        }
+        if($iconPack){
+            foreach($this->providers as $provider){
+                $provider->useIconPack($iconPack);
             }
         }
     }
     
-    public function setUrl($url){
-        foreach($this->providers as $provider){
+    public function setUrl($url) {
+        foreach ($this->providers as $provider) {
             $provider->addShareUrl($url);
         }
     }
