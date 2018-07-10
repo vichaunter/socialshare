@@ -1,0 +1,21 @@
+{
+    "name": "vichaunter/socialshare",
+    "description": "Social share buttons, the easy way",
+    "keywords": ["social","buttons","sharing"],
+    "homepage": "https://www.vichaunter.org",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "VicHaunter",
+            "email": "vichaunter@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "VicHaunter\\": "src/"
+        }
+    }
+}
